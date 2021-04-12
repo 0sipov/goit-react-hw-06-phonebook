@@ -1,32 +1,33 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styles from './Filter.module.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { filterUpdate } from '../../redux/contacts/contacts-actions';
 
-class Filter extends Component {
-  static propTypes = {
-    onChangeFilter: PropTypes.func,
-  };
+const Filter = props => {
+  const { filterUpdate, state } = props;
+  return (
+    <label>
+      Find contacts by name
+      <input
+        className={styles.input}
+        name="filter"
+        type="text"
+        value={state.filter}
+        onChange={e => filterUpdate(e.target.value)}
+      />
+    </label>
+  );
+};
 
-  render() {
-    const { filterUpdate } = this.props;
-    return (
-      <label>
-        Find contacts by name
-        <input
-          className={styles.input}
-          name="filter"
-          type="text"
-          onChange={e => filterUpdate(e.target.value)}
-        ></input>
-      </label>
-    );
-  }
-}
+Filter.propTypes = {
+  onChangeFilter: PropTypes.func,
+};
+
+const mapStateToProps = state => ({ state });
 
 const mapDispatchToProps = dispatch => {
   return { filterUpdate: contactName => dispatch(filterUpdate(contactName)) };
 };
 
-export default connect(undefined, mapDispatchToProps)(Filter);
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);

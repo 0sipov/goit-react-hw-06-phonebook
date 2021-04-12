@@ -1,36 +1,34 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styles from './ContactList.module.css';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { removeContact } from '../../redux/contacts/contacts-actions';
 
-class ContactList extends Component {
-  render() {
-    const { filtredContacts, onRemoveContact } = this.props;
-    return (
-      <ul className={styles.contacts}>
-        {filtredContacts.map(elem => {
-          return (
-            <li className={styles.contact} key={elem.id}>
-              <p>
-                {elem.name}: {elem.number}
-              </p>
-              <button
-                className={styles.removeButton}
-                type="button"
-                onClick={() => {
-                  onRemoveContact(elem.id);
-                }}
-              >
-                Delete
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
-}
+const ContactList = props => {
+  const { filtredContacts, onRemoveContact } = props;
+  return (
+    <ul className={styles.contacts}>
+      {filtredContacts.map(elem => {
+        return (
+          <li className={styles.contact} key={elem.id}>
+            <p>
+              {elem.name}: {elem.number}
+            </p>
+            <button
+              className={styles.removeButton}
+              type="button"
+              onClick={() => {
+                onRemoveContact(elem.id);
+              }}
+            >
+              Delete
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  );
+};
 
 ContactList.propTypes = {
   onRemoveContact: PropTypes.func,
@@ -45,14 +43,9 @@ const filterContacts = (filter, contacts) => {
   return filtredContacts;
 };
 
-const mapStateToProps = state => {
-  return {
-    filtredContacts: filterContacts(
-      state.contacts.filter,
-      state.contacts.items,
-    ),
-  };
-};
+const mapStateToProps = state => ({
+  filtredContacts: filterContacts(state.contacts.filter, state.contacts.items),
+});
 
 const mapDispatchToProps = dispatch => {
   return { onRemoveContact: contactId => dispatch(removeContact(contactId)) };
